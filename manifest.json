@@ -1,0 +1,25 @@
+{
+    "manifest_version": 3,
+    "name": "LazadaAffiliate",
+    "description": "Auto affiliate",
+    "version": "1.0",
+    "icons": {
+        "16": "/images/16x16.png",
+        "48": "/images/48x48.png",
+        "128": "/images/128x128.png"
+    },
+    "content_scripts": [
+        {
+            "matches": ["https://pages.lazada.vn/wow/*"],
+            "js": ["content.js"]
+        }
+    ],
+    "background": {
+        "service_worker": "worker.js"
+    },
+    "permissions": [
+        "storage",
+        "activeTab",
+        "tabs"
+    ]
+}
