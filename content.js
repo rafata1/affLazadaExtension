@@ -20,7 +20,6 @@ async function run(originUrls, subId1, subId2, subId3, masterLink, sendResponse)
 
     await sleep(500)
     sendResponse(affLinks)
-    return true
 }
 
 function sleep(ms) {

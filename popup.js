@@ -8,6 +8,7 @@ subBtn.addEventListener("click", process)
 async function process() {
 
     subBtn.disabled = true
+    subBtn.style.backgroundColor = "yellow"
     subBtn.innerText = "Đang xử lý"
 
 
@@ -63,11 +64,17 @@ async function process() {
             (response) => {
                 console.log("affLinks", response)
 
+                if (!response || response.length != urls.length) {
+                    setOutput(out, 'Có lỗi xảy ra, vui lòng thử lại')
+                    return
+                }
+
                 for (let i = 0; i < urls.length; i++) {
                     content = content.replace(urls[i], response[i])
                 }
 
                 setOutput(out, content)
+                subBtn.style.backgroundColor = "#80ff00"
                 subBtn.innerText = 'Đã xong'
             });
     });
