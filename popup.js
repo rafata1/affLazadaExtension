@@ -1,23 +1,56 @@
 console.log("injected popup.js")
 
+function loadCache() {
+    let subId1 = localStorage.getItem("subId1")
+    let subId2 = localStorage.getItem("subId2")
+    let subId3 = localStorage.getItem("subId3")
+    let userCode = localStorage.getItem("userCode")
+
+    if (subId1) {
+        document.getElementById("subId1").value = subId1
+    }
+
+    if (subId2) {
+        document.getElementById("subId2").value = subId2
+    }
+
+    if (subId3) {
+        document.getElementById("subId3").value = subId3
+    }
+
+    if (userCode) {
+        document.getElementById("userCode").value = userCode
+    }
+}
+
+loadCache()
+
+function setCache(subId1, subId2, subId3, userCode) {
+    localStorage.setItem("subId1", subId1)
+    localStorage.setItem("subId2", subId2)
+    localStorage.setItem("subId3", subId3)
+    localStorage.setItem("userCode", userCode)
+}
+
+
 const subBtn = document.getElementById("subBtn")
 
 subBtn.addEventListener("click", process)
 
 
 async function process() {
-
+    
     subBtn.disabled = true
     subBtn.style.backgroundColor = "yellow"
     subBtn.innerText = "Đang xử lý"
 
-
     let content = document.getElementById("inp").value
-    let subId1 = document.getElementById("subId1").value
-    let subId2 = document.getElementById("subId2").value
-    let subId3 = document.getElementById("subId3").value
-    let userCode = document.getElementById("userCode").value
+    subId1 = document.getElementById("subId1").value
+    subId2 = document.getElementById("subId2").value
+    subId3 = document.getElementById("subId3").value
+    userCode = document.getElementById("userCode").value
 
+    setCache(subId1, subId2, subId3, userCode)
 
     const out = document.getElementById("out")
 
