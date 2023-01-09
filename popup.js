@@ -39,7 +39,7 @@ subBtn.addEventListener("click", process)
 
 
 async function process() {
-    
+
     subBtn.disabled = true
     subBtn.style.backgroundColor = "yellow"
     subBtn.innerText = "Đang xử lý"
@@ -54,6 +54,7 @@ async function process() {
 
     const out = document.getElementById("out")
 
+    let wrapDomain = await getWrapDomain(userCode)
     let masterLink = await getMasterLink(userCode)
     if (masterLink == '') {
         setOutput(out, "Lỗi lấy master link")
@@ -83,7 +84,7 @@ async function process() {
 
     console.log("originUrls", originUrls)
 
-    chrome.tabs.query({ currentWindow: true, active: true }, function (tabs) {
+    chrome.tabs.query({currentWindow: true, active: true}, function (tabs) {
         var activeTab = tabs[0];
         chrome.tabs.sendMessage(
             activeTab.id,
@@ -103,7 +104,11 @@ async function process() {
                 }
 
                 for (let i = 0; i < urls.length; i++) {
-                    content = content.replace(urls[i], response[i])
+                    let replaceStr = response[i]
+                    if (wrapDomain) {
+                        replaceStr = response[i].replace("https://s.lazada.vn/l.", wrapDomain)
+                    }
+                    content = content.replace(urls[i], replaceStr)
                 }
 
                 setOutput(out, content)
@@ -116,12 +121,12 @@ async function process() {
 async function openTabAndGetUrl(url) {
     let res = ""
     let tabID = 0
-    chrome.tabs.create({ url: url, active: false }, function (tab) {
+    chrome.tabs.create({url: url, active: false}, function (tab) {
         tabID = tab.id
     });
 
     // waiting for chrome to open tab
-    await sleep(500)
+    await sleep(2000)
     if (tabID == 0) {
         console.log("error tabID = 0", url)
         return ''
@@ -174,5 +179,11 @@ async function getMasterLink(userCode) {
     const response = await fetch('https://api.vouchertoday.org/api/getMasterLink?code=' + userCode);
     const res = await response.json()
     console.log(res.link)
+    return res.link
+}
+
+async function getWrapDomain(userCode) {
+    const response = await fetch('https://api.vouchertoday.org/api/getWrapDomain?code=' + userCode);
+    const res = await response.json()
     return res.link
 }
