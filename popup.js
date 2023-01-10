@@ -81,6 +81,8 @@ async function process() {
     const originUrls = []
 
     for (let i = 0; i < urls.length; i++) {
+        document.getElementById('p1').innerText = 'Đang lấy link gốc ' + (i+1) +'/'+urls.length
+        document.getElementById('p1').hidden = false
         let url = await openTabAndGetUrl(urls[i])
         if (url == '') {
             setOutput(out, 'Lỗi khi xử  lý link: ' + urls[i] + ' vui lòng kiểm tra kết nối mạng và thử lại')
