@@ -5,6 +5,8 @@ function loadCache() {
     let subId2 = localStorage.getItem("subId2")
     let subId3 = localStorage.getItem("subId3")
     let userCode = localStorage.getItem("userCode")
+    let inp = localStorage.getItem("content")
+    let out = localStorage.getItem("out")
 
     if (subId1) {
         document.getElementById("subId1").value = subId1
@@ -21,17 +23,18 @@ function loadCache() {
     if (userCode) {
         document.getElementById("userCode").value = userCode
     }
+
+    if (inp) {
+        document.getElementById("inp").value = inp
+    }
+
+    if (out) {
+        document.getElementById("out").value = out
+        document.getElementById("out").hidden = false
+    }
 }
 
 loadCache()
-
-function setCache(subId1, subId2, subId3, userCode) {
-    localStorage.setItem("subId1", subId1)
-    localStorage.setItem("subId2", subId2)
-    localStorage.setItem("subId3", subId3)
-    localStorage.setItem("userCode", userCode)
-}
-
 
 const subBtn = document.getElementById("subBtn")
 
@@ -50,7 +53,11 @@ async function process() {
     subId3 = document.getElementById("subId3").value
     userCode = document.getElementById("userCode").value
 
-    setCache(subId1, subId2, subId3, userCode)
+    localStorage.setItem("subId1", subId1)
+    localStorage.setItem("subId2", subId2)
+    localStorage.setItem("subId3", subId3)
+    localStorage.setItem("userCode", userCode)
+    localStorage.setItem("content", content)
 
     const out = document.getElementById("out")
 
@@ -138,6 +145,11 @@ async function openTabAndGetUrl(url) {
 
     await sleep(1000)
     chrome.tabs.remove(tabID)
+
+    if (res && res == url) {
+        return ''
+    }
+
     res = removeURLParameter(res, "trafficFrom")
     res = removeURLParameter(res, "laz_trackid")
     res = removeURLParameter(res, "mkttid")
@@ -170,6 +182,7 @@ function removeURLParameter(url, parameter) {
 }
 
 function setOutput(output, content) {
+    localStorage.setItem("out", content)
     output.value = content
     output.hidden = false
 }
