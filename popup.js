@@ -60,6 +60,7 @@ async function process() {
     localStorage.setItem("content", content)
 
     const out = document.getElementById("out")
+    const out2 = document.getElementById("out2")
 
     let wrapDomain = await getWrapDomain(userCode)
     let masterLink = await getMasterLink(userCode)
@@ -85,13 +86,14 @@ async function process() {
         document.getElementById('p1').hidden = false
         let url = await openTabAndGetUrl(urls[i])
         if (url == '') {
-            setOutput(out, 'Lỗi khi xử  lý link: ' + urls[i] + ' vui lòng kiểm tra kết nối mạng và thử lại')
+            setOutput(out, 'Không thể lấy link gốc: ' + urls[i] + ' vui lòng kiểm tra kết nối mạng và thử lại')
             return
         }
         originUrls.push(url)
     }
 
-    console.log("originUrls", originUrls)
+    out2.innerHTML = originUrls.join("\n\n")
+    out2.hidden = false
 
     chrome.tabs.query({ currentWindow: true, active: true }, function (tabs) {
         var activeTab = tabs[0];
@@ -143,7 +145,7 @@ async function openTabAndGetUrl(url) {
     });
 
     // waiting for chrome to open tab
-    await sleep(2000)
+    await sleep(1500)
     if (tabID == 0) {
         console.log("error tabID = 0", url)
         return ''
