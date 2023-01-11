@@ -93,7 +93,7 @@ async function process() {
 
     console.log("originUrls", originUrls)
 
-    chrome.tabs.query({currentWindow: true, active: true}, function (tabs) {
+    chrome.tabs.query({ currentWindow: true, active: true }, function (tabs) {
         var activeTab = tabs[0];
         chrome.tabs.sendMessage(
             activeTab.id,
@@ -128,9 +128,17 @@ async function process() {
 }
 
 async function openTabAndGetUrl(url) {
+
+    if (isOriginLink(url)) {
+        url = removeURLParameter(url, "trafficFrom")
+        url = removeURLParameter(url, "laz_trackid")
+        url = removeURLParameter(url, "mkttid")
+        return url
+    }
+
     let res = ""
     let tabID = 0
-    chrome.tabs.create({url: url, active: false}, function (tab) {
+    chrome.tabs.create({ url: url, active: false }, function (tab) {
         tabID = tab.id
     });
 
@@ -201,4 +209,12 @@ async function getWrapDomain(userCode) {
     const response = await fetch('https://api.vouchertoday.org/api/getWrapDomain?code=' + userCode);
     const res = await response.json()
     return res.link
+}
+
+function isOriginLink(url) {
+    if (url.includes("www.lazada.vn") || url.includes("pages.lazada.vn")) {
+        return true
+    }
+
+    return false
 }
